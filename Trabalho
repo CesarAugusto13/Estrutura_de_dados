@@ -1,0 +1,96 @@
+from collections import deque
+
+stack =  deque()
+entradas = {'{': '}', '[': ']', '(': ')'}
+def peek(self):
+        if self.isEmpty():
+            exit(-1)
+        return self.arr[self.top]
+
+def calcular(operacao, numeros):
+    resultado = numeros[0]
+    for i in range(1, len(numeros)):
+        if operacao == "1":
+            resultado += numeros[i]
+        elif operacao == "2":
+            resultado -= numeros[i]
+        elif operacao == "3":
+            resultado *= numeros[i]
+        elif operacao == "4":
+            resultado /= numeros[i]
+    return resultado
+
+def adicionar_operacao(fila_operacoes):
+    operacao = input("Digite a operação (1- soma, 2- subtração, 3- multiplicação, 4- divisão): ")
+    num_numeros = int(input("Digite a quantidade de números que deseja calcular: "))
+
+    numeros = []
+    for i in range(num_numeros):
+        num = float(input("Digite um número: "))
+        numeros.append(num)
+    
+    resultado = calcular(operacao, numeros)
+    fila_operacoes.append((operacao, numeros, resultado))
+
+    print(f"Resultado: {operacao} {numeros} = {resultado}")
+
+def executar_proxima_operacao(fila_operacoes):
+    if len(fila_operacoes) == 0:
+        print("A fila de operações está vazia!")
+        return
+    
+    operacao, numeros, resultado = fila_operacoes.pop(0)
+    print(f"Executando operação: {operacao} {numeros} = {resultado}")
+
+def executar_todas_operacoes(fila_operacoes):
+    if len(fila_operacoes) == 0:
+        print("A fila de operações está vazia!")
+        return
+    
+    for operacao, numeros, resultado in fila_operacoes:
+        print(f"Executando operação: {operacao} {numeros} = {resultado}")
+    
+    fila_operacoes.clear()
+
+def menu():
+    fila_operacoes = []
+    while True:
+        print("\n=== CALCULADORA ===")
+        print("0 - Sair")
+        print("1 - Adicionar operação")
+        print("2 - Executar próxima operação")
+        print("3 - Executar todas as operações")
+        print("4 - Validar expressão")
+        escolha = input("Digite a opção desejada: ")
+        
+        if escolha == "0":
+            break
+        elif escolha == "1":
+            adicionar_operacao(fila_operacoes)
+        elif escolha == "2":
+            executar_proxima_operacao(fila_operacoes)
+        elif escolha == "3":
+            executar_todas_operacoes(fila_operacoes)
+        elif escolha == "4":
+            expressao = input('Digite a expressão que deseja validar: ')
+            for z in expressao:
+                if z in entradas.keys():
+                 entradas.append(z)
+                elif z in entradas.values():
+                    if not stack:
+                        print("INVÁLIDA!")
+                        break
+                    last_char = stack.pop()
+                    if z != entradas[last_char]:
+                        print("INVÁLIDA!")
+                        break
+                    elif not z.isdigit() and z not in '+-/*':
+                        print("INVÁLIDA!")
+                        break
+                    else:
+                        if stack:
+                            print("INVÁLIDA!")
+                        else:
+                            print("VÁLIDA!")
+                        
+menu()
